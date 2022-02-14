@@ -12,7 +12,7 @@ import spacy
 from PIL import Image
 from pdf2image import convert_from_path
 
-file = 'oct 2021.pdf'
+file = '9021387282_SDCTN0057331491.pdf'
 
 # Convert necessary pages to jpg from pdf
 # Store Pdf with convert_from_path function
