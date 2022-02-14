@@ -4,7 +4,7 @@ NIC Projects
 
 ogtelephone_report.py ==> Sample code to run through the bill and identify chunks of required text
                       
-                      ==> Need to fed input through spacy and print in required format
+                      ==> Need to feed input through spacy and print in required format
                       
                       
 highlight_tele.py ==> Identification of text chunks using coordinates
