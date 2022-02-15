@@ -26,6 +26,7 @@ args = vars(ap.parse_args())
 # to localize each area of text in the input
 # image
 images = cv2.imread(args["image"])
+(h, w, c) = images.shape[:3]
 rgb = cv2.cvtColor(images, cv2.COLOR_BGR2RGB)
 results = pytesseract.image_to_data(rgb, output_type=Output.DICT)
  
@@ -48,11 +49,15 @@ for i in range(0, len(results["text"])):
     # filter out weak confidence text localizations
     if conf > args["min_conf"]:
          
-        # We will display the confidence and text to
+        # We will display the text to
         # our terminal
-        print("Confidence: {}".format(conf))
-        print("Text: {}".format(text))
-        print("")
+        t1 = str(x) +"+"+ str(y)
+        t2 = str(x+w) +"+"+ str(y+h)
+        coor = t1+","+t2
+        
+        #print("Confidence: {}".format(conf))
+        #print("Text: {}".format(text))
+        #print("")
          
         # We then strip out non-ASCII text so we can
         # draw the text on the image We will be using
@@ -64,11 +69,15 @@ for i in range(0, len(results["text"])):
                       (x + w, y + h),
                       (0, 0, 255), 2)
         cv2.putText(images,
-                    text,
+                    coor,
                     (x, y - 10),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     1.2, (0, 255, 255), 3)
-         
+
+        print (text)
 # After all, we will show the output image
+cv2.imwrite("newimage.jpg", images)
 cv2.imshow("Image", images)
 cv2.waitKey(0)
+
+#num2words.num2words(123456, lang='en_IN')
