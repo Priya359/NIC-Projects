@@ -21,16 +21,17 @@ ap.add_argument("-c", "--min-conf",
 args = vars(ap.parse_args())
  
 # We load the input image and then convert
-# it to RGB from BGR. We then use Tesseract
-# to localize each area of text in the input
-# image
+# it to GRAY from BGR.
+# We use the Gaussian Blur to divide the area of text to contour.
+# We then use Tesseract to localize each area of text in the input image
+
 image = cv2.imread(args["image"])
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blur = cv2.GaussianBlur(gray, (9,9), 0)
 thresh = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,30)
 
 # Dilate to combine adjacent text contours
-kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (30,30))
+kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (30,30)) #Pruning the area to structure
 dilate = cv2.dilate(thresh, kernel, iterations=4)
 
 # Find contours, highlight text areas, and extract ROIs
