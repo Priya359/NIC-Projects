@@ -48,10 +48,10 @@ for c in cnts:
         cv2.imwrite('Results/ROI_{}.png'.format(ROI_number), ROI)
         text = pytesseract.image_to_string(ROI)
         text = "".join(text).strip()
-        if "Bharat" in text:
-            #list_of_words = text.split()
-            #next_word = list_of_words[list_of_words.index("Period") + 1]+" "+list_of_words[list_of_words.index("Period") + 2]+" "+list_of_words[list_of_words.index("Period") + 3]
-            print (text)
+        if "Billing Period" in text:
+            list_of_words = text.split()
+            next_word = list_of_words[list_of_words.index("Period") + 1]+" "+list_of_words[list_of_words.index("Period") + 2]+" "+list_of_words[list_of_words.index("Period") + 3]
+            print (next_word)
         
         ROI_number += 1
         
