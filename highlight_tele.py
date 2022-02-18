@@ -1,40 +1,37 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Feb 13 19:35:23 2022
+Created on Wed Feb 16 11:06:02 2022
 
 @author: Swarnameenakshi
 """
 import pytesseract 
-import argparse
 import cv2
- 
-# We construct the argument parser
-# and parse the arguments
-ap = argparse.ArgumentParser()
- 
-ap.add_argument("-i", "--image",
-                required=True,
-                help="path to input image to be OCR'd")
-ap.add_argument("-c", "--min-conf",
-                type=int, default=0,
-                help="minimum confidence value to filter weak text detection")
-args = vars(ap.parse_args())
- 
-# We load the input image and then convert
-# it to GRAY from BGR.
-# We use the Gaussian Blur to divide the area of text to contour.
-# We then use Tesseract to localize each area of text in the input image
+from pdf2image import convert_from_path
 
-image = cv2.imread(args["image"])
+file = 'oct 2021.pdf'
+operator = input ("Enter the operator name: ")
+
+if operator == "BSNL": 
+    m=30
+    n=30
+elif operator == "Airtel":
+    m=30
+    n=20
+elif operator == "Jio":
+    m=40
+    n=20
+    
+images = convert_from_path(file, 500, poppler_path="E:\\Anaconda\\poppler-0.68.0_x86\\poppler-0.68.0\\bin")
+images[0].save('read_file.jpg', 'JPEG')
+
+image = cv2.imread('read_file.jpg')
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blur = cv2.GaussianBlur(gray, (9,9), 0)
 thresh = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,30)
 
-# Dilate to combine adjacent text contours
-kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (30,30)) #Pruning the area to structure
+kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (m,n))
 dilate = cv2.dilate(thresh, kernel, iterations=4)
 
-# Find contours, highlight text areas, and extract ROIs
 cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
@@ -46,16 +43,50 @@ for c in cnts:
         cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 3)
         ROI = image[y:y+h, x:x+w]
         cv2.imwrite('Results/ROI_{}.png'.format(ROI_number), ROI)
+        
         text = pytesseract.image_to_string(ROI)
-        text = "".join(text).strip()
-        if "Billing Period" in text:
-            list_of_words = text.split()
-            next_word = list_of_words[list_of_words.index("Period") + 1]+" "+list_of_words[list_of_words.index("Period") + 2]+" "+list_of_words[list_of_words.index("Period") + 3]
-            print (next_word)
+        text = "".join(text).strip('\nt')
+        #print (text)
         
-        ROI_number += 1
-        
-#cv2.imshow('thresh', thresh)
-#cv2.imshow('dilate', dilate)
-#cv2.imshow('image', image)
-#cv2.waitKey()
+        for line in text.split('\n'):
+                if operator == "Airtel":
+                    if "eriod" in line:
+                        per = line[line.index("eriod") + len("eriod"):].replace(' ','').split(":")
+                        print(per)
+                    if "MISS"  in line:
+                        nam = line[line.index("MISS") + len("MISS"):].replace(' ','').split(":")
+                        print(nam)
+                    if "Amount Due" in line:
+                        amt = line[line.index("Due") + len("Due"):].replace(' ','').split(":")
+                        print(amt)
+                    elif "Total @" in line:
+                        amt = line[line.index("@") + len("@"):].replace(' ','').split("\t")
+                        print(amt)
+                    if  "Airtel number" in line:
+                        num = line[line.index("number") + len("number"):].replace(' ','').split(":")
+                        print(num)
+                    elif "Phone Number" in line:
+                        num = line[line.index("Number") + len("Number"):].replace(' ','').split(":")
+                        print(num)
+                    if "Statement Date" in line:
+                        dat = line[line.index("Date") + len("Date"):].replace(' ','').split(":")
+                        print(dat)
+                    elif "Bill date" in line:
+                        dat = line[line.index("date") + len("date"):].replace(' ','').split(":")
+                        print(dat)
+                        
+                if operator == "BSNL":
+                    if "AMOUNT PAYABLE" in text:
+                        print(line)
+                    if "TELEPHONE NUMBER" in text:
+                        print(line)
+                    if "Invoice Date" in text:
+                        print(line)
+                    if "Billing Period" in text:
+                        print(line)
+                    
+                    
+                        
+                        
+        ROI_number += 1        
+   
