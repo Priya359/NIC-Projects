@@ -16,9 +16,7 @@ highlight_tele.py ==> Identification of text chunks using coordinates
                   ['', '24Oct2021']
                   ['', '23Sep2021-22Oct2021']
                   
-                  
-           
-                  ==> Uploaded pictures of personal bill
+                 
         
 
 
