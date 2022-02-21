@@ -1,6 +1,15 @@
 # NIC-Projects
 NIC Projects
 
+Apitele.py ==> Complete API code with different functions for each operator
+
+           ==> Need to clean code for making the functions small
+           
+           ==> Addition of other operators MTNL, JIO, Vodafone
+
+
+
+
 highlight_tele.py ==> Identification of text chunks using coordinates
 
                   ==> Complete identification of required text
@@ -15,15 +24,6 @@ highlight_tele.py ==> Identification of text chunks using coordinates
                   ['', '1234567890']
                   ['', '24Oct2021']
                   ['', '23Sep2021-22Oct2021']
-                  
-                 
+          
+                      
         
-
-
-ogtelephone_report.py ==> Sample code to run through the bill and identify chunks of required text
-                      
-                      ==> Need to feed input through spacy and print in required format
-                      ==> Only BSNL and Airtel to be sliced (additional condition check required)
-                      
-                      
-
