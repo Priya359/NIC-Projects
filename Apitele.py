@@ -101,14 +101,14 @@ def airtel_bill(self, bill):
             ROI_number += 1       
 
         return jsonify({
-            'Name': 'name',
-            'Mobile_number': 'mobile_number',
-            'Bill_period': 'bill_period',
-            'Total_amount': 'bill_amount',
-            'Bill_date':'bill_date'})
+				'Name': name,
+				'Mobile_number': mobile_number,
+				'Bill_period': bill_period,
+				'Total_amount': bill_amount,
+				'Bill_date': bill_date})
     
     else:
-        ("Image not clear. Please upload a clear image.")
+        return jsonify({'Error': 'Image not clear. Please upload a clear image.'})
 
 def bsnl_bill(self, bill):
     images = convert_from_path(bill, 500, poppler_path="E:\\Anaconda\\poppler-0.68.0_x86\\poppler-0.68.0\\bin")
@@ -163,14 +163,14 @@ def bsnl_bill(self, bill):
             ROI_number += 1       
 
         return jsonify({
-            'Name': 'name',
-            'Mobile_number': 'mobile_number',
-            'Bill_period': 'bill_period',
-            'Total_amount': 'bill_amount',
-            'Bill_date':'bill_date'})
+				'Name': name,
+				'Mobile_number': mobile_number,
+				'Bill_period': bill_period,
+				'Total_amount': bill_amount,
+				'Bill_date': bill_date})
         
     else:
-        ("Image not clear. Please upload a clear image.")
+        return jsonify({'Error': 'Image not clear. Please upload a clear image.'})
         
         
 def jio_bill(self, bill):
@@ -230,14 +230,14 @@ def jio_bill(self, bill):
             ROI_number += 1       
 
         return jsonify({
-            'Name': 'name',
-            'Mobile_number': 'mobile_number',
-            'Bill_period': 'bill_period',
-            'Total_amount': 'bill_amount',
-            'Bill_date':'bill_date'})
+				'Name': name,
+				'Mobile_number': mobile_number,
+				'Bill_period': bill_period,
+				'Total_amount': bill_amount,
+				'Bill_date': bill_date})
     
     else:
-        ("Image not clear. Please upload a clear image.")
+        return jsonify({'Error': 'Image not clear. Please upload a clear image.'})
 
 
 api.add_resource(BillPdfReader, '/api/v1/getBillReader')
