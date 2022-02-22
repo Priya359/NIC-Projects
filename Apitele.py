@@ -69,7 +69,7 @@ def airtel_bill(self, bill):
             text = "".join(text).strip('\nt')
             
             for line in text.split('\n'):
-                nam = ["MR","MISS","MRS","MS"]
+                nam = ["MR","MISS","MRS","MS","Mr","Miss","Mrs","Ms"]
                 for i in nam:
                     if i in line:
                         names = line[line.index(i) + len(i):].replace(' ',' ').split(":")
