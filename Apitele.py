@@ -86,9 +86,9 @@ def airtel_bill(self, bill):
                 if  "Airtel number" in line:
                      mobile_numbers = line[line.index("number") + len("number"):].replace(' ','').split(":")
                      mobile_number = mobile_numbers[len(mobile_numbers)-1]
-                elif "Phone Number" in line:
-                      mobile_numbers = line[line.index("Number") + len("Number"):].replace(' ','').split(":")
-                      mobile_number = mobile_numbers[len(mobile_numbers)-1]
+                elif "Mobile" in line:
+                      mobile_numbers = line[line.index("Mobile") + len("Mobile"):].split(" ", 2)
+                      mobile_number = mobile_numbers[len(mobile_numbers)-2]
                 if "Statement Date" in line:
                     bill_dates = line[line.index("Date") + len("Date"):].replace(' ','').split(":")
                     bill_date = bill_dates[len(bill_dates)-1]
