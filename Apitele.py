@@ -56,55 +56,59 @@ def airtel_bill(self, bill):
     cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
-    ROI_number = 0
-    for c in cnts:
-        area = cv2.contourArea(c)
-        if area > 10000:
-            x,y,w,h = cv2.boundingRect(c)
-            cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 3)
-            ROI = image[y:y+h, x:x+w]
-            cv2.imwrite('Results/ROI_{}.png'.format(ROI_number), ROI)
-            
-            text = pytesseract.image_to_string(ROI)
-            text = "".join(text).strip('\nt')
-            
-            for line in text.split('\n'):
-                nam = ["MR","MISS","MRS","MS","Mr","Miss","Mrs","Ms"]
-                for i in nam:
-                    if i in line:
-                        names = line[line.index(i) + len(i):].replace(' ',' ').split(":")
-                        name = names[len(names)-1]
-                if "eriod" in line:
-                    bill_periods = line[line.index("eriod") + len("eriod"):].replace(' ','').split(":")
-                    bill_period = bill_periods[len(bill_periods)-1]
-                if "Amount Due" in line:
-                    bill_amounts = line[line.index("Due") + len("Due"):].replace(' ','').split(":")
-                    bill_amount = bill_amounts[len(bill_amounts)-1]
-                elif "Total @" in line:
-                      bill_amounts = line[line.index("@") + len("@"):].replace(' ','').split("\t")
-                      bill_amount = bill_amounts[len(bill_amounts)-1]
-                if  "Airtel number" in line:
-                     mobile_numbers = line[line.index("number") + len("number"):].replace(' ','').split(":")
-                     mobile_number = mobile_numbers[len(mobile_numbers)-1]
-                elif "Mobile" in line:
-                      mobile_numbers = line[line.index("Mobile") + len("Mobile"):].split(" ", 2)
-                      mobile_number = mobile_numbers[len(mobile_numbers)-2]
-                if "Statement Date" in line:
-                    bill_dates = line[line.index("Date") + len("Date"):].replace(' ','').split(":")
-                    bill_date = bill_dates[len(bill_dates)-1]
-                elif "Bill date" in line:
-                      bill_dates = line[line.index("date") + len("date"):].replace(' ','').split(":")
-                      bill_date = bill_dates[len(bill_dates)-1]
-            
+    if cnts:
+        ROI_number = 0
+        for c in cnts:
+            area = cv2.contourArea(c)
+            if area > 10000:
+                x,y,w,h = cv2.boundingRect(c)
+                cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 3)
+                ROI = image[y:y+h, x:x+w]
+                cv2.imwrite('Results/ROI_{}.png'.format(ROI_number), ROI)
+                
+                text = pytesseract.image_to_string(ROI)
+                text = "".join(text).strip('\nt')
+                
+                for line in text.split('\n'):
+                    nam = ["MR","MISS","MRS","MS","Mr","Miss","Mrs","Ms"]
+                    for i in nam:
+                        if i in line:
+                            names = line[line.index(i) + len(i):].replace(' ',' ').split(":")
+                            name = names[len(names)-1]
+                    if "eriod" in line:
+                        bill_periods = line[line.index("eriod") + len("eriod"):].replace(' ','').split(":")
+                        bill_period = bill_periods[len(bill_periods)-1]
+                    if "Amount Due" in line:
+                        bill_amounts = line[line.index("Due") + len("Due"):].replace(' ','').split(":")
+                        bill_amount = bill_amounts[len(bill_amounts)-1]
+                    elif "Total @" in line:
+                          bill_amounts = line[line.index("@") + len("@"):].replace(' ','').split("\t")
+                          bill_amount = bill_amounts[len(bill_amounts)-1]
+                    if  "Airtel number" in line:
+                         mobile_numbers = line[line.index("number") + len("number"):].replace(' ','').split(":")
+                         mobile_number = mobile_numbers[len(mobile_numbers)-1]
+                    elif "Mobile" in line:
+                          mobile_numbers = line[line.index("Mobile") + len("Mobile"):].split(" ", 2)
+                          mobile_number = mobile_numbers[len(mobile_numbers)-2]
+                    if "Statement Date" in line:
+                        bill_dates = line[line.index("Date") + len("Date"):].replace(' ','').split(":")
+                        bill_date = bill_dates[len(bill_dates)-1]
+                    elif "Bill date" in line:
+                          bill_dates = line[line.index("date") + len("date"):].replace(' ','').split(":")
+                          bill_date = bill_dates[len(bill_dates)-1]
+                
 
-        ROI_number += 1       
+            ROI_number += 1       
 
-    return jsonify({
-        'Name': 'name',
-        'Mobile_number': 'mobile_number',
-        'Bill_period': 'bill_period',
-        'Total_amount': 'bill_amount',
-        'Bill_date':'bill_date'})
+        return jsonify({
+            'Name': 'name',
+            'Mobile_number': 'mobile_number',
+            'Bill_period': 'bill_period',
+            'Total_amount': 'bill_amount',
+            'Bill_date':'bill_date'})
+    
+    else:
+        ("Image not clear. Please upload a clear image.")
 
 def bsnl_bill(self, bill):
     images = convert_from_path(bill, 500, poppler_path="E:\\Anaconda\\poppler-0.68.0_x86\\poppler-0.68.0\\bin")
@@ -121,48 +125,117 @@ def bsnl_bill(self, bill):
     cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 
-    ROI_number = 0
-    for c in cnts:
-        area = cv2.contourArea(c)
-        if area > 10000:
-            x,y,w,h = cv2.boundingRect(c)
-            cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 3)
-            ROI = image[y:y+h, x:x+w]
-            cv2.imwrite('Results/ROI_{}.png'.format(ROI_number), ROI)
-            
-            text = pytesseract.image_to_string(ROI)
-            text = "".join(text).strip('\nt')
-            
-            if "AMOUNT PAYABLE" in text:
-                w = text.split()
-                bill_amount = w[w.index("PAYABLE") + 2]
-            if "TELEPHONE NUMBER" in text:
-                w = text.split()
-                mobile_number = w[w.index("NUMBER") + 1]
-                #print(phn)
-                ROI = image[632:1088,119:963] 	#Name of the person is matched using the coordinates of the bounding box over it
+    if cnts:
+        ROI_number = 0
+        for c in cnts:
+            area = cv2.contourArea(c)
+            if area > 10000:
+                x,y,w,h = cv2.boundingRect(c)
+                cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 3)
+                ROI = image[y:y+h, x:x+w]
+                cv2.imwrite('Results/ROI_{}.png'.format(ROI_number), ROI)
+                
                 text = pytesseract.image_to_string(ROI)
-                if text:
-                    name = text.split('\n', 1)[0]
-                    #print(name)
-            if "Invoice Date" in text:
-                w = text.split()
-                bill_date = w[w.index("Date") + 2]
-                #print(dat)
-            if "Billing Period" in text:
-                w = text.split()
-                bill_period = w[w.index("Period") + 1]+" "+w[w.index("Period") + 2]+" "+w[w.index("Period") + 3]
-                #print(bill_per)
-            
+                text = "".join(text).strip('\nt')
+                
+                if "AMOUNT PAYABLE" in text:
+                    w = text.split()
+                    bill_amount = w[w.index("PAYABLE") + 2]
+                if "TELEPHONE NUMBER" in text:
+                    w = text.split()
+                    mobile_number = w[w.index("NUMBER") + 1]
+                    #print(phn)
+                    ROI = image[632:1088,119:963] 	#Name of the person is matched using the coordinates of the bounding box over it
+                    text = pytesseract.image_to_string(ROI)
+                    if text:
+                        name = text.split('\n', 1)[0]
+                        #print(name)
+                if "Invoice Date" in text:
+                    w = text.split()
+                    bill_date = w[w.index("Date") + 2]
+                    #print(dat)
+                if "Billing Period" in text:
+                    w = text.split()
+                    bill_period = w[w.index("Period") + 1]+" "+w[w.index("Period") + 2]+" "+w[w.index("Period") + 3]
+                    #print(bill_per)
+                
 
-        ROI_number += 1       
+            ROI_number += 1       
 
-    return jsonify({
-        'Name': 'name',
-        'Mobile_number': 'mobile_number',
-        'Bill_period': 'bill_period',
-        'Total_amount': 'bill_amount',
-        'Bill_date':'bill_date'})
+        return jsonify({
+            'Name': 'name',
+            'Mobile_number': 'mobile_number',
+            'Bill_period': 'bill_period',
+            'Total_amount': 'bill_amount',
+            'Bill_date':'bill_date'})
+        
+    else:
+        ("Image not clear. Please upload a clear image.")
+        
+        
+def jio_bill(self, bill):
+    images = convert_from_path(bill, 500, poppler_path="E:\\Anaconda\\poppler-0.68.0_x86\\poppler-0.68.0\\bin")
+    images[0].save('read_file.jpg', 'JPEG')
+
+    image = cv2.imread('read_file.jpg')
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray, (9,9), 0)
+    thresh = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,30)
+
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (30,30))
+    dilate = cv2.dilate(thresh, kernel, iterations=4)
+
+    cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+
+    if cnts:
+        ROI_number = 0
+        for c in cnts:
+            area = cv2.contourArea(c)
+            if area > 10000:
+                x,y,w,h = cv2.boundingRect(c)
+                cv2.rectangle(image, (x, y), (x + w, y + h), (36,255,12), 3)
+                ROI = image[y:y+h, x:x+w]
+                cv2.imwrite('Results/ROI_{}.png'.format(ROI_number), ROI)
+                
+                text = pytesseract.image_to_string(ROI)
+                text = "".join(text).strip('\nt')
+                
+                for line in text.split('\n'):
+                    nam = ["MR","MISS","MRS","MS","Mr","Miss","Mrs","Ms"]
+                    for i in nam:
+                        if i in line:
+                            names = line[line.index(i) + len(i):].replace(' ',' ').split(":")
+                            name = names[len(names)-1]
+                   
+                    if "Total current charges" in line:
+                      bill_amounts = line[line.index("charges") + len("charges"):].replace(' ','').split(")")
+                      bill_amount = bill_amounts[len(bill_amounts)-1]
+                      
+                    if "Statement Date" in line:
+                      bill_dates = line[line.index("Date") + len("Date"):].replace(' ','').split(":")
+                      bill_date = bill_dates[len(bill_dates)-1]
+                     
+                    if "Jio Number" in line:
+                      mobile_numbers = line[line.index("Number") + len("Number"):].replace(' ','').split(":")
+                      mobile_number = mobile_numbers[len(mobile_numbers)-1]
+                      
+                    if "Statement from" in line:
+                      bill_periods = line[line.index("from") + len("from"):].replace(' ','').split(":")
+                      bill_period = bill_periods[len(bill_periods)-1]
+                
+
+            ROI_number += 1       
+
+        return jsonify({
+            'Name': 'name',
+            'Mobile_number': 'mobile_number',
+            'Bill_period': 'bill_period',
+            'Total_amount': 'bill_amount',
+            'Bill_date':'bill_date'})
+    
+    else:
+        ("Image not clear. Please upload a clear image.")
 
 
 api.add_resource(BillPdfReader, '/api/v1/getBillReader')
