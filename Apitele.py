@@ -182,7 +182,7 @@ def jio_bill(self, bill):
     blur = cv2.GaussianBlur(gray, (9,9), 0)
     thresh = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV,11,30)
 
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (30,30))
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (10,10))
     dilate = cv2.dilate(thresh, kernel, iterations=4)
 
     cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -202,27 +202,29 @@ def jio_bill(self, bill):
                 text = "".join(text).strip('\nt')
                 
                 for line in text.split('\n'):
-                    nam = ["MR","MISS","MRS","MS","Mr","Miss","Mrs","Ms"]
-                    for i in nam:
-                        if i in line:
-                            names = line[line.index(i) + len(i):].replace(' ',' ').split(":")
-                            name = names[len(names)-1]
-                   
-                    if "Total current charges" in line:
-                      bill_amounts = line[line.index("charges") + len("charges"):].replace(' ','').split(")")
-                      bill_amount = bill_amounts[len(bill_amounts)-1]
-                      
-                    if "Statement Date" in line:
+                   names = ["MR","MISS","MRS","MS","Mr","Miss","Mrs","Ms"]
+                   for i in names:
+                       if i in line:
+                           nam = line[line.index(i) + len(i):].replace(' ',' ').split(".")
+                           name = nam[len(nam)-1]
+                           
+                   if "Statement Date" in line:
                       bill_dates = line[line.index("Date") + len("Date"):].replace(' ','').split(":")
                       bill_date = bill_dates[len(bill_dates)-1]
                      
-                    if "Jio Number" in line:
+                   if "Jio Number" in line:
                       mobile_numbers = line[line.index("Number") + len("Number"):].replace(' ','').split(":")
                       mobile_number = mobile_numbers[len(mobile_numbers)-1]
                       
-                    if "Statement from" in line:
-                      bill_periods = line[line.index("from") + len("from"):].replace(' ','').split(":")
-                      bill_period = bill_periods[len(bill_periods)-1]
+                if "Pay By" in text:
+                    w = text.split()
+                    bill_amounts = w[w.index("By") + 3].split("-")
+                    bill_amount = bill_amounts[len(bill_amounts)-1]
+                    
+                if "Statement from" in text:
+                    w = text.split()
+                    bill_periods = w[w.index("from") + 1]+" "+w[w.index("from") + 2]+" "+w[w.index("from") + 3]
+                    bill_period = bill_periods
                 
 
             ROI_number += 1       
