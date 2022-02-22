@@ -1,11 +1,11 @@
 # NIC-Projects
 NIC Projects
 
-Apitele.py ==> Complete API code with different functions for each operator
+Apitele.py ==> Complete API code with different functions for each operator Airtel, Jio, BSNL
 
            ==> Need to clean code for making the functions small
            
-           ==> Addition of other operators MTNL, JIO, Vodafone
+           ==> Addition of other operators MTNL, Vodafone
 
 
 
